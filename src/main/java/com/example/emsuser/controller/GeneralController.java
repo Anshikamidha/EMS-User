@@ -5,11 +5,11 @@ import com.example.emsuser.dto.UserDetailsResponseDTo;
 import com.example.emsuser.dto.UserResponseLeaveDTO;
 import com.example.emsuser.exception.CustomException;
 import com.example.emsuser.model.UserModel;
-import com.example.emsuser.repository.UserRepository;
+
 import com.example.emsuser.security.JwtTokenProvider;
 import com.example.emsuser.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,11 +18,16 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/general")
 public class GeneralController {
+
+  private final  UserService userService;
+
+   private final JwtTokenProvider jwtTokenProvider;
     @Autowired
-    UserService userService;
-   @Autowired
-   private JwtTokenProvider jwtTokenProvider;
-    @GetMapping("/validate")
+    public GeneralController(UserService userService,JwtTokenProvider jwtTokenProvider) {
+        this.userService = userService;
+        this.jwtTokenProvider = jwtTokenProvider;
+    }
+   @GetMapping("/validate")
     public String validate(@CookieValue("jwt_token") String token) {
 
 

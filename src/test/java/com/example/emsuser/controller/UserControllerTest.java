@@ -72,12 +72,12 @@ class UserControllerTest {
     @Test
     void registerUser_WithValidData_ReturnsCreatedStatus() {
         // Act
-        ResponseEntity<UserResponseDTO> response = userController.registerUser(registerDTO);
+        ResponseEntity<UserResponseDTO> res = userController.registerUser(registerDTO);
 
         // Assert
-        assertNotNull(response);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(responseDTO, response.getBody());
+        assertNotNull(res);
+        assertEquals(HttpStatus.OK, res.getStatusCode());
+        assertEquals(responseDTO, res.getBody());
         verify(userService, times(1)).registerUser(registerDTO);
     }
 

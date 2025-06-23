@@ -17,10 +17,10 @@ public class JwtTokenProvider {
     @Value("${SecretKey}")
     private String jwtSecret;
 
-    private final long jwtExpirationInMs = (86400000)*3; // 1 day
+    private static final long JWT_EXPIRATION  = (86400000)* 3L; // 1 day
 
     private Key key = null;
-
+    
     // Lazy initialization of the key
     private Key getSigningKey() {
         if (key == null) {
@@ -32,7 +32,7 @@ public class JwtTokenProvider {
 
     public String generateToken(UUID userId, String role) {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
+        Date expiryDate = new Date(now.getTime() + JWT_EXPIRATION);
 
         return Jwts.builder()
                 .setSubject(userId.toString())

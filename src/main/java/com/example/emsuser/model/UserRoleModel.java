@@ -1,6 +1,6 @@
 package com.example.emsuser.model;
 
-import com.example.emsuser.model.UserModel;
+
 import jakarta.persistence.*;
 import lombok.Data;
 

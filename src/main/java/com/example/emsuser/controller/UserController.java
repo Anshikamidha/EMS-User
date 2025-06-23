@@ -2,6 +2,7 @@ package com.example.emsuser.controller;
 
 import com.example.emsuser.dto.*;
 import com.example.emsuser.service.UserService;
+
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -46,14 +47,15 @@ public class UserController {
 
     }
     @GetMapping("/logout")
+
     public ResponseEntity<String> logout(HttpServletResponse response) {
 
 
-        ResponseCookie jwtCookie = ResponseCookie.from("jwt_token", null)
+        ResponseCookie jwtCookie = ResponseCookie.from("jwt_token","")
                 .httpOnly(true)
                 .secure(false)
                 .path("/")
-                .maxAge(Duration.ofDays(7))
+                .maxAge(Duration.ofDays(2))
                 .sameSite("Lax")
                 .build();
 

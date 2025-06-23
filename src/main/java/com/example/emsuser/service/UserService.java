@@ -19,24 +19,30 @@ import java.time.Duration;
 import java.util.*;
 
 @Service
-public class
-UserService {
+public class UserService {
 
+    static final String USER_NOT_FOUND = "User not found with id: ";
 
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
-
-    @Autowired
-    private UserRoleRepository userRoleRepository;
+    private final UserRepository userRepository;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final UserRoleRepository userRoleRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    EmailService emailService ;
-
+    public UserService(
+            UserRepository userRepository,
+            JwtTokenProvider jwtTokenProvider,
+            UserRoleRepository userRoleRepository,
+            PasswordEncoder passwordEncoder,
+            EmailService emailService
+    ) {
+        this.userRepository = userRepository;
+        this.jwtTokenProvider = jwtTokenProvider;
+        this.userRoleRepository = userRoleRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.emailService = emailService;
+    }
 
     public ResponseEntity<UserResponseDTO> registerUser(UserRegisterDTO userRegisterDTO) {
 
@@ -74,7 +80,7 @@ UserService {
 
         if (!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
 
-            throw new RuntimeException("Invalid password");
+            throw new CustomException("Invalid password");
 
         }
 
@@ -116,7 +122,7 @@ UserService {
        }
 
             UserModel user = userRepository.findById(userId)
-                    .orElseThrow(() -> new RuntimeException("User not found with id: "));
+                    .orElseThrow(() -> new RuntimeException(USER_NOT_FOUND));
 
 
 
@@ -150,13 +156,13 @@ UserService {
 
     }
 public UserModel getUserById(UUID userId){
-        return userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found with id: "));
+        return userRepository.findById(userId).orElseThrow(() -> new RuntimeException(USER_NOT_FOUND));
 }
 
 
     public void setLeaveCount(UUID userId, int leaveCount)
     {
-        UserModel user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found with id: "));
+        UserModel user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException(USER_NOT_FOUND));
         user.setLeaveCount(leaveCount);
         userRepository.save(user);
     }
@@ -175,7 +181,7 @@ public UserModel getUserById(UUID userId){
 
     public ResponseEntity<String> resetPassword(PasswordResetDTO passwordResetDTO) {
 
-        UserModel userModel = userRepository.findById(UUID.fromString(passwordResetDTO.getToken())).orElseThrow(() -> new CustomException("User not found with id: "));
+        UserModel userModel = userRepository.findById(UUID.fromString(passwordResetDTO.getToken())).orElseThrow(() -> new CustomException(USER_NOT_FOUND));
         userModel.setPassword(passwordEncoder.encode(passwordResetDTO.getNewPassword()));
         userRepository.save(userModel);
         return ResponseEntity.ok().body("Password Reset Successfully ");

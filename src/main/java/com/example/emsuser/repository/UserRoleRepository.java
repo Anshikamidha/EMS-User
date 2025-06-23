@@ -1,6 +1,6 @@
 package com.example.emsuser.repository;
 
-import com.example.emsuser.model.UserModel;
+
 import com.example.emsuser.model.UserRoleModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 
